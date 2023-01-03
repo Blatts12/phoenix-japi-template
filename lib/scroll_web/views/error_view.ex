@@ -1,4 +1,6 @@
 defmodule ScrollWeb.ErrorView do
+  @moduledoc false
+
   use ScrollWeb, :view
 
   # If you want to customize a particular status code

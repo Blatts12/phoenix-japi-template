@@ -52,10 +52,12 @@ defmodule Scroll.MixProject do
       {:jsonapi, "~> 1.4.0"},
       {:pbkdf2_elixir, "~> 2.0"},
       {:bodyguard, "~> 2.4.2"},
+      {:corsica, "~> 1.1"},
       {:ex_machina, "~> 2.7.0", only: :test},
-      {:doctor, "~> 0.19.0", only: :dev},
       {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
-      {:credo, "~> 1.6.3", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.6.3", only: [:dev, :test], runtime: false},
+      {:doctor, "~> 0.19.0", only: :dev},
+      {:sobelow, "~> 0.11.1", only: :dev}
     ]
   end
 

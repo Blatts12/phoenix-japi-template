@@ -9,4 +9,8 @@ defmodule ScrollWeb.Types do
 
   @typedoc "Plug.Conn.t()"
   @type conn() :: Plug.Conn.t()
+
+  @typedoc "Supervisor start link response"
+  @type supervisor_start_link_response() ::
+          {:ok, pid} | {:error, {:already_started, pid} | {:shutdown, term} | term}
 end

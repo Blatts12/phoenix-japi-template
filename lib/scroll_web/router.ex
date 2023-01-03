@@ -1,4 +1,6 @@
 defmodule ScrollWeb.Router do
+  @moduledoc false
+
   use ScrollWeb, :router
 
   pipeline :api do

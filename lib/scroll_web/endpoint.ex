@@ -1,4 +1,6 @@
 defmodule ScrollWeb.Endpoint do
+  @moduledoc false
+
   use Phoenix.Endpoint, otp_app: :scroll
 
   # The session will be stored in the cookie and signed,
@@ -43,6 +45,7 @@ defmodule ScrollWeb.Endpoint do
 
   plug Plug.MethodOverride
   plug Plug.Head
+  plug Corsica, max_age: 600, origins: "*"
   plug Plug.Session, @session_options
   plug ScrollWeb.Router
 end

@@ -7,6 +7,7 @@ defmodule ScrollWeb.FallbackController do
   use ScrollWeb, :controller
 
   # This clause handles errors returned by Ecto's insert/update/delete.
+  @spec call(Plug.Conn.t(), {:error, Ecto.Changeset.t() | atom()} | atom()) :: Plug.Conn.t()
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)

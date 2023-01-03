@@ -1,4 +1,6 @@
 defmodule ScrollWeb.PostController do
+  @moduledoc false
+
   use ScrollWeb, :controller
 
   alias Scroll.Posts

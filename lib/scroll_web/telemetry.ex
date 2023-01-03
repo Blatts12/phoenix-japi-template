@@ -2,8 +2,12 @@ defmodule ScrollWeb.Telemetry do
   @moduledoc false
 
   use Supervisor
+
   import Telemetry.Metrics
 
+  alias ScrollWeb.Types
+
+  @spec start_link(map()) :: Types.supervisor_start_link_response()
   def start_link(arg) do
     Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
   end
@@ -21,6 +25,7 @@ defmodule ScrollWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
+  @spec metrics() :: list(Telemetry.Metrics.Summary.t())
   def metrics do
     [
       # Phoenix Metrics

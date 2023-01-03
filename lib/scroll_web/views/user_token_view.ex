@@ -3,6 +3,7 @@ defmodule ScrollWeb.UserTokenView do
 
   use JSONAPI.View, type: "users"
 
+  @spec fields() :: list(atom())
   def fields do
     [:username]
   end

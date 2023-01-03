@@ -3,6 +3,7 @@ defmodule ScrollWeb.AuthUserPlug do
 
   import Plug.Conn
 
+  @spec init(Plug.opts()) :: Plug.opts()
   def init(options) do
     options
   end
