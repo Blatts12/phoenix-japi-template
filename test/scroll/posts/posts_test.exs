@@ -1,7 +1,8 @@
 defmodule Scroll.Posts.PostsTest do
   use Scroll.DataCase
 
-  alias Scroll.Posts.{Post, Posts}
+  alias Scroll.Posts
+  alias Scroll.Posts.Post
 
   describe "list_posts/3" do
     test "returns empty list when there are no posts" do

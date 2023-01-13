@@ -26,6 +26,16 @@ config :scroll, ScrollWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :scroll, Scroll.Mailer, adapter: Swoosh.Adapters.Local
 
+config :scroll, :phoenix_swagger,
+  swagger_files: %{
+    "priv/static/swagger.json" => [
+      router: ScrollWeb.Router,
+      endpoint: ScrollWeb.Endpoint
+    ]
+  }
+
+config :scroll, MyApp.Web.Endpoint, url: [host: "localhost"]
+
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false
 
@@ -53,6 +63,8 @@ config :jsonapi,
 
 config :bodyguard,
   default_error: :unauthorized
+
+config :phoenix_swagger, json_library: Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

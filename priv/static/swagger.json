@@ -1,0 +1,52 @@
+{
+  "basePath": "/api",
+  "definitions": {
+    "User": {
+      "description": "User",
+      "properties": {
+        "attributes": {
+          "properties": {
+            "created_at": {
+              "description": "First created timestamp UTC",
+              "type": "string"
+            },
+            "updated_at": {
+              "description": "Last update timestamp UTC",
+              "format": "ISO-8601",
+              "type": "string"
+            },
+            "username": {
+              "description": "User's username",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "id": {
+          "description": "The JSON-API resource ID",
+          "type": "string"
+        },
+        "links": {
+          "properties": {},
+          "type": "object"
+        },
+        "relationships": {
+          "properties": {},
+          "type": "object"
+        },
+        "type": {
+          "description": "The JSON-API resource type",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "host": "localhost:4000",
+  "info": {
+    "title": "Scroll API",
+    "version": "0.0.1"
+  },
+  "paths": {},
+  "swagger": "2.0"
+}

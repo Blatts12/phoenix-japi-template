@@ -51,4 +51,20 @@ defmodule ScrollWeb.UserController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  @spec swagger_definitions :: map()
+  def swagger_definitions do
+    %{
+      User:
+        JsonApi.resource do
+          description("User")
+
+          attributes do
+            username(:string, "User's username")
+            updated_at(:string, "Last update timestamp UTC", format: "ISO-8601")
+            created_at(:string, "First created timestamp UTC")
+          end
+        end
+    }
+  end
 end

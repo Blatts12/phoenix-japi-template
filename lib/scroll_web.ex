@@ -20,7 +20,9 @@ defmodule ScrollWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: ScrollWeb
+      use PhoenixSwagger
 
+      import PhoenixSwagger.Schema
       import Plug.Conn
       import ScrollWeb.ControllerHelpers
       import ScrollWeb.Gettext

@@ -25,6 +25,12 @@ defmodule ScrollWeb.Router do
     end
   end
 
+  scope "/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :scroll,
+      swagger_file: "swagger.json"
+  end
+
   scope "/api", ScrollWeb do
     pipe_through [:auth, :api]
 
@@ -35,6 +41,16 @@ defmodule ScrollWeb.Router do
       delete "/logout_all", UserTokenController, :delete_all
       get "/self", UserTokenController, :self
     end
+  end
+
+  def swagger_info do
+    %{
+      basePath: "/api",
+      info: %{
+        version: "0.0.1",
+        title: "Scroll API"
+      }
+    }
   end
 
   # Enables LiveDashboard only for development
