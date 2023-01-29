@@ -11,6 +11,11 @@ defmodule ScrollWeb.PostController do
     struct: Posts.Post,
     module: Posts.Posts
 
+  plug JSONAPI.QueryParser,
+    filter: ~w(title),
+    sort: ~w(title inserted_at content),
+    view: ScrollWeb.PostView
+
   # @spec swagger_definitions :: map()
   # def swagger_definitions do
   #   %{
