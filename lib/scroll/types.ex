@@ -7,6 +7,13 @@ defmodule Scroll.Types do
   @typedoc "Params valid for `Ecto.Changeset.cast/4`"
   @type params() :: %{required(binary()) => term()} | %{required(atom()) => term()}
 
+  @typedoc "Value returned by controller"
+  @type controller() :: Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
+
+  @typedoc "Supervisor start link response"
+  @type supervisor_start_link_response() ::
+          {:ok, pid} | {:error, {:already_started, pid} | {:shutdown, term} | term}
+
   @typedoc "A required field in schema"
   @type field(field_type) :: field_type | nil
 

@@ -2,13 +2,12 @@ defmodule ScrollWeb.ControllerHelpers do
   @moduledoc "Module containing helpers to use within controllers"
 
   alias Scroll.Accounts.User
-  alias ScrollWeb.Types
 
-  @spec fetch_current_user(Types.conn()) :: User.t() | nil
+  @spec fetch_current_user(Plug.Conn.t()) :: User.t() | nil
   def fetch_current_user(%{assigns: %{current_user: user}} = _conn), do: user
   def fetch_current_user(_), do: nil
 
-  @spec fetch_opts(Types.conn()) :: [
+  @spec fetch_opts(Plug.Conn.t()) :: [
           include: Keyword.t() | [],
           sort: Keyword.t() | [],
           filter: Keyword.t() | []

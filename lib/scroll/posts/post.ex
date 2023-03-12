@@ -23,7 +23,7 @@ defmodule Scroll.Posts.Post do
   @required_fields [:title, :content, :user_id]
   @optional_fields []
 
-  @spec changeset(t(), Types.params()) :: Changeset.t()
+  @spec changeset(__MODULE__.t(), Types.params()) :: Changeset.t()
   def changeset(post, attrs) do
     post
     |> cast(attrs, @required_fields ++ @optional_fields)

@@ -18,7 +18,7 @@ defmodule Scroll.Accounts.User do
   @create_required_fields [:username, :password]
   @create_optional_fields []
 
-  @spec create_changeset(t(), Types.params()) :: Changeset.t()
+  @spec create_changeset(__MODULE__.t(), Types.params()) :: Changeset.t()
   def create_changeset(user, attrs) do
     user
     |> cast(attrs, @create_required_fields ++ @create_optional_fields)

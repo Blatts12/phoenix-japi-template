@@ -5,7 +5,7 @@ defmodule ScrollWeb.Telemetry do
 
   import Telemetry.Metrics
 
-  alias ScrollWeb.Types
+  alias Scroll.Types
 
   @spec start_link(map()) :: Types.supervisor_start_link_response()
   def start_link(arg) do

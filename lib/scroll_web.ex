@@ -27,8 +27,8 @@ defmodule ScrollWeb do
       import ScrollWeb.ControllerHelpers
       import ScrollWeb.Gettext
 
+      alias Scroll.Types
       alias ScrollWeb.Router.Helpers, as: Routes
-      alias ScrollWeb.Types
     end
   end
 

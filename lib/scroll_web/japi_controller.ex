@@ -28,7 +28,8 @@ defmodule ScrollWeb.JapiController do
 
       # list
       if unquote(enable_index) do
-        @spec index(Types.conn(), Types.params()) :: Types.controller()
+        @spec index(Plug.Conn.t(), map()) ::
+                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
         def index(conn, _params) do
           data = unquote(res_module).list(fetch_opts(conn))
           render(conn, "index.json", data: data)
@@ -37,7 +38,8 @@ defmodule ScrollWeb.JapiController do
 
       # one
       if unquote(enable_show) do
-        @spec show(Types.conn(), Types.params()) :: Types.controller()
+        @spec show(Plug.Conn.t(), map()) ::
+                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
         def show(conn, %{"id" => id}) do
           data = unquote(res_module).get(id, fetch_opts(conn))
 
@@ -49,7 +51,8 @@ defmodule ScrollWeb.JapiController do
 
       # create
       if unquote(enable_create) do
-        @spec create(Types.conn(), Types.params()) :: Types.controller()
+        @spec create(Plug.Conn.t(), map()) ::
+                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
         def create(conn, params) do
           with {:ok, %unquote(res_struct){} = data} <-
                  unquote(res_module).create(put_user_id(conn, params, unquote(put_user_id?))) do
@@ -62,7 +65,8 @@ defmodule ScrollWeb.JapiController do
 
       # update
       if unquote(enable_update) do
-        @spec update(Types.conn(), Types.params()) :: Types.controller()
+        @spec update(Plug.Conn.t(), map()) ::
+                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
         def update(conn, %{"id" => id} = params) do
           data = unquote(res_module).get(id)
 
@@ -77,7 +81,8 @@ defmodule ScrollWeb.JapiController do
 
       # detele
       if unquote(enable_delete) do
-        @spec delete(Types.conn(), Types.params()) :: Types.controller()
+        @spec delete(Plug.Conn.t(), map()) ::
+                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
         def delete(conn, %{"id" => id}) do
           data = unquote(res_module).get(id)
 

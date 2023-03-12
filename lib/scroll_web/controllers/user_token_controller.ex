@@ -19,14 +19,14 @@ defmodule ScrollWeb.UserTokenController do
   @remember_me_max_age 60 * 60 * 24 * 60
   @remember_me_options [sign: true, max_age: @remember_me_max_age, same_site: "Lax"]
 
-  @spec self(Types.conn(), Types.params()) :: Types.controller()
+  @spec self(Plug.Conn.t(), Types.params()) :: Types.controller()
   def self(%{assigns: %{current_user: user}} = conn, _params) do
     conn
     |> renew_session()
     |> render("show.json", data: user)
   end
 
-  @spec create(Types.conn(), Types.params()) :: Types.controller()
+  @spec create(Plug.Conn.t(), Types.params()) :: Types.controller()
   def create(
         conn,
         %{
@@ -51,7 +51,7 @@ defmodule ScrollWeb.UserTokenController do
     end
   end
 
-  @spec delete(Types.conn(), Types.params()) :: Types.controller()
+  @spec delete(Plug.Conn.t(), Types.params()) :: Types.controller()
   def delete(conn, _params) do
     user_token = get_session(conn, :user_token)
     user_token && Accounts.delete_session_token(user_token)
@@ -62,7 +62,7 @@ defmodule ScrollWeb.UserTokenController do
     |> send_resp(:no_content, "")
   end
 
-  @spec delete_all(Types.conn(), Types.params()) :: Types.controller()
+  @spec delete_all(Plug.Conn.t(), Types.params()) :: Types.controller()
   def delete_all(%{assigns: %{current_user: user}} = conn, _params) do
     Accounts.delete_all_session_tokens(user)
 
@@ -72,8 +72,8 @@ defmodule ScrollWeb.UserTokenController do
     |> send_resp(:no_content, "")
   end
 
-  @spec maybe_write_remember_me_cookie(Types.conn(), UserToken.t(), Types.params()) ::
-          Types.conn()
+  @spec maybe_write_remember_me_cookie(Plug.Conn.t(), UserToken.t(), Types.params()) ::
+          Plug.Conn.t()
   defp maybe_write_remember_me_cookie(conn, user_token, %{"remember_me" => "true"}) do
     put_resp_cookie(conn, @auth_cookie, user_token.token, @remember_me_options)
   end
@@ -82,7 +82,7 @@ defmodule ScrollWeb.UserTokenController do
     put_resp_cookie(conn, @auth_cookie, user_token.token, @token_options)
   end
 
-  @spec renew_session(Types.conn()) :: Types.conn()
+  @spec renew_session(Plug.Conn.t()) :: Plug.Conn.t()
   def renew_session(conn) do
     conn
     |> fetch_session()
