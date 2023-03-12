@@ -28,4 +28,6 @@ defmodule Scroll.Types do
   @type include() :: Keyword.t() | []
   @type sort() :: Keyword.t() | []
   @type filter() :: Keyword.t() | []
+
+  @type japi_opts() :: [include: include(), sort: sort(), filter: filter()]
 end

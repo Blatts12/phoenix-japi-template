@@ -1,48 +1,45 @@
 defmodule ScrollWeb.JapiController do
   @moduledoc false
 
-  @type settings() :: [
-          index: Keyword.t(),
-          show: Keyword.t(),
-          create: Keyword.t(),
-          update: Keyword.t(),
-          delete: Keyword.t(),
-          struct: struct(),
-          module: module()
-        ]
   @type opts() :: [
-          index: boolean() | {boolean()},
-          show: boolean() | {boolean()},
-          create: boolean() | {boolean(), put_user_id?: boolean()},
-          update: boolean() | {boolean()},
-          delete: boolean() | {boolean()},
+          index: [enable: boolean()],
+          show: [enable: boolean()],
+          create: [enable: boolean(), put_user_id?: boolean()],
+          update: [enable: boolean()],
+          delete: [enable: boolean()],
           struct: struct(),
           module: module()
         ]
 
   @spec __using__(opts()) :: any()
   defmacro __using__(opts \\ []) do
-    quote bind_quoted: [settings: process_opts(opts)] do
+    [enable: enable_index] = Keyword.fetch!(opts, :index)
+    [enable: enable_show] = Keyword.fetch!(opts, :show)
+    [enable: enable_create, put_user_id?: put_user_id?] = Keyword.fetch!(opts, :create)
+    [enable: enable_update] = Keyword.fetch!(opts, :update)
+    [enable: enable_delete] = Keyword.fetch!(opts, :delete)
+    res_struct = Keyword.fetch!(opts, :struct)
+    res_module = Keyword.fetch!(opts, :module)
+
+    quote do
       use ScrollWeb, :controller
 
       action_fallback(ScrollWeb.FallbackController)
 
       # list
-      if settings[:index][:enabled?] do
+      if unquote(enable_index) do
         @spec index(Types.conn(), Types.params()) :: Types.controller()
         def index(conn, _params) do
-          %{include: include, sort: sort, filter: filter} = fetch_opts(conn)
-          data = unquote(settings[:module]).list(include, sort, filter)
+          data = unquote(res_module).list(fetch_opts(conn))
           render(conn, "index.json", data: data)
         end
       end
 
       # one
-      if settings[:show][:enabled?] do
+      if unquote(enable_show) do
         @spec show(Types.conn(), Types.params()) :: Types.controller()
         def show(conn, %{"id" => id}) do
-          %{include: include} = fetch_opts(conn)
-          data = unquote(settings[:module]).get(id, include)
+          data = unquote(res_module).get(id, fetch_opts(conn))
 
           with :ok <- is_existing(data) do
             render(conn, "show.json", data: data)
@@ -51,11 +48,11 @@ defmodule ScrollWeb.JapiController do
       end
 
       # create
-      if settings[:create][:enabled?] do
+      if unquote(enable_create) do
         @spec create(Types.conn(), Types.params()) :: Types.controller()
         def create(conn, params) do
-          with {:ok, %unquote(settings[:struct]){} = data} <-
-                 unquote(settings[:module]).create(put_user_id(conn, params)) do
+          with {:ok, %unquote(res_struct){} = data} <-
+                 unquote(res_module).create(put_user_id(conn, params, unquote(put_user_id?))) do
             conn
             |> put_status(:created)
             |> render("show.json", data: data)
@@ -64,62 +61,33 @@ defmodule ScrollWeb.JapiController do
       end
 
       # update
-      if settings[:update][:enabled?] do
+      if unquote(enable_update) do
         @spec update(Types.conn(), Types.params()) :: Types.controller()
         def update(conn, %{"id" => id} = params) do
-          user = fetch_current_user(conn)
-          data = unquote(settings[:module]).get(id)
+          data = unquote(res_module).get(id)
 
           with :ok <- is_existing(data),
-               :ok <- unquote(settings[:struct]).authorize(:update, user, data),
-               {:ok, %unquote(settings[:struct]){} = data} <-
-                 unquote(settings[:module]).update(data, params) do
+               :ok <- unquote(res_struct).authorize(:update, fetch_current_user(conn), data),
+               {:ok, %unquote(res_struct){} = data} <-
+                 unquote(res_module).update(data, params) do
             render(conn, "show.json", data: data)
           end
         end
       end
 
       # detele
-      if settings[:delete][:enabled?] do
+      if unquote(enable_delete) do
         @spec delete(Types.conn(), Types.params()) :: Types.controller()
         def delete(conn, %{"id" => id}) do
-          user = fetch_current_user(conn)
-          data = unquote(settings[:module]).get(id)
+          data = unquote(res_module).get(id)
 
           with :ok <- is_existing(data),
-               :ok <- unquote(settings[:struct]).authorize(:delete, user, data),
-               {:ok, %unquote(settings[:struct]){}} <- unquote(settings[:module]).delete(data) do
+               :ok <- unquote(res_struct).authorize(:delete, fetch_current_user(conn), data),
+               {:ok, %unquote(res_struct){}} <- unquote(res_module).delete(data) do
             send_resp(conn, :no_content, "")
           end
         end
       end
     end
-  end
-
-  @spec process_opts(opts()) :: settings()
-  defp process_opts(opts) do
-    [
-      index: process_opt(opts[:index]),
-      show: process_opt(opts[:show]),
-      create: process_opt(opts[:create]),
-      update: process_opt(opts[:update]),
-      delete: process_opt(opts[:delete]),
-      struct: opts[:struct],
-      module: opts[:module]
-    ]
-  end
-
-  @spec process_opt(tuple() | boolean()) :: Keyword.t()
-  defp process_opt(opt) when is_boolean(opt) do
-    [enabled?: opt]
-  end
-
-  defp process_opt(opt) when is_tuple(opt) do
-    [enabled?: elem(opt, 0)]
-    |> Keyword.merge(elem(opt, 1))
-  end
-
-  defp process_opt(_) do
-    [enabled?: false]
   end
 end

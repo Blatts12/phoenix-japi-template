@@ -1,9 +1,8 @@
 defmodule Scroll.Accounts do
-  @moduledoc """
-    The Accounts context.
-  """
+  @moduledoc false
 
-  alias Scroll.Accounts.{Users, UserTokens}
+  alias Scroll.Accounts.Users
+  alias Scroll.Accounts.UserTokens
 
   # User
   defdelegate list_users, to: Users

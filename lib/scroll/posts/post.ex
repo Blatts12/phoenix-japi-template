@@ -5,6 +5,7 @@ defmodule Scroll.Posts.Post do
 
   alias Ecto.Changeset
   alias Scroll.Accounts.User
+  alias Scroll.Posts.PostPolicy
 
   @type t() :: Scroll.Posts.PostSpec.t()
 
@@ -17,7 +18,7 @@ defmodule Scroll.Posts.Post do
     timestamps()
   end
 
-  defdelegate authorize(action, user, post), to: Scroll.Posts.PostPolicy
+  defdelegate authorize(action, user, post), to: PostPolicy
 
   @required_fields [:title, :content, :user_id]
   @optional_fields []

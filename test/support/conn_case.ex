@@ -23,7 +23,10 @@ defmodule ScrollWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import Scroll.Factory
-      import ScrollWeb.{AssertHelpers, ConnCase, ConnHelpers, JSONAPIHelpers}
+      import ScrollWeb.AssertHelpers
+      import ScrollWeb.ConnCase
+      import ScrollWeb.ConnHelpers
+      import ScrollWeb.JSONAPIHelpers
 
       alias ScrollWeb.Router.Helpers, as: Routes
 

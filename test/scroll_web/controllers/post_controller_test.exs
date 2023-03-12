@@ -1,5 +1,6 @@
 defmodule ScrollWeb.PostControllerTest do
   use ScrollWeb.ConnCase
+  use PhoenixSwagger.SchemaTest, "priv/static/swagger.json"
 
   describe "index - post" do
     test "lists all posts", %{conn: conn} do
@@ -14,17 +15,9 @@ defmodule ScrollWeb.PostControllerTest do
   end
 
   describe "create - post" do
-    setup do
-      user = insert(:user)
-
-      %{user: user}
-    end
-
-    test "renders post when data is valid", %{conn: conn, user: user} do
-      conn = log_in_user(conn, user)
-
-      params = params_for(:post)
-      data = japi_data("posts", params)
+    test "renders post when data is valid", %{conn: conn} do
+      conn = log_in_user(conn)
+      data = japi_data("posts", :post)
 
       conn = post(conn, Routes.post_path(conn, :create), data: data)
       assert %{"id" => id} = json_response(conn, 201)["data"]
@@ -33,8 +26,8 @@ defmodule ScrollWeb.PostControllerTest do
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn = log_in_user(conn, user)
+    test "renders errors when data is invalid", %{conn: conn} do
+      conn = log_in_user(conn)
 
       params = params_for(:post) |> Map.put(:title, nil)
       data = japi_data("posts", params)
@@ -44,8 +37,7 @@ defmodule ScrollWeb.PostControllerTest do
     end
 
     test "renders forbidden error without user", %{conn: conn} do
-      params = params_for(:post)
-      data = japi_data("posts", params)
+      data = japi_data("posts", :post)
 
       conn = post(conn, Routes.post_path(conn, :create), data: data)
       assert_forbidden(conn)
@@ -62,9 +54,7 @@ defmodule ScrollWeb.PostControllerTest do
 
     test "renders post when data is valid", %{conn: conn, post: post, user: user} do
       conn = log_in_user(conn, user)
-
-      params = params_for(:post)
-      data = japi_data("posts", params, post.id)
+      data = japi_data("posts", :post, post.id)
 
       conn = put(conn, Routes.post_path(conn, :update, post), data: data)
       assert %{"id" => id} = json_response(conn, 200)["data"]
@@ -72,7 +62,7 @@ defmodule ScrollWeb.PostControllerTest do
       conn = get(conn, Routes.post_path(conn, :show, id))
       assert %{"id" => ^id, "attributes" => attributes} = json_response(conn, 200)["data"]
 
-      %{title: title} = params
+      %{"attributes" => %{title: title}} = data
       assert %{"title" => ^title} = attributes
     end
 
@@ -87,14 +77,11 @@ defmodule ScrollWeb.PostControllerTest do
     end
 
     test "other user cannot update someones post", %{conn: conn, post: post} do
-      user = insert(:user)
-      conn = log_in_user(conn, user)
-
-      params = params_for(:post)
-      data = japi_data("posts", params, post.id)
+      conn = log_in_user(conn)
+      data = japi_data("posts", :post, post.id)
 
       conn = put(conn, Routes.post_path(conn, :update, post), data: data)
-      assert_forbidden(conn)
+      assert_unauthorized(conn)
     end
   end
 
@@ -121,7 +108,7 @@ defmodule ScrollWeb.PostControllerTest do
       conn = log_in_user(conn, user)
 
       conn = delete(conn, Routes.post_path(conn, :delete, post))
-      assert_forbidden(conn)
+      assert_unauthorized(conn)
     end
   end
 end

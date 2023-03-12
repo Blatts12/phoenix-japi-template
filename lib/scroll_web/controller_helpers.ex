@@ -8,18 +8,17 @@ defmodule ScrollWeb.ControllerHelpers do
   def fetch_current_user(%{assigns: %{current_user: user}} = _conn), do: user
   def fetch_current_user(_), do: nil
 
-  @spec fetch_opts(Types.conn()) :: %{
+  @spec fetch_opts(Types.conn()) :: [
           include: Keyword.t() | [],
           sort: Keyword.t() | [],
           filter: Keyword.t() | []
-        }
-  def fetch_opts(%{assigns: %{jsonapi_query: query}}) do
-    %{
+        ]
+  def fetch_opts(%{assigns: %{jsonapi_query: query}}),
+    do: [
       include: Map.get(query, :include, []),
       sort: Map.get(query, :sort, []),
       filter: Map.get(query, :filter, [])
-    }
-  end
+    ]
 
   def fetch_opts(_conn),
     do: %{include: [], sort: [], filter: []}

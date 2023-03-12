@@ -55,14 +55,14 @@ defmodule ScrollWeb.UserController do
   @spec swagger_definitions :: map()
   def swagger_definitions do
     %{
-      User:
+      UserResource:
         JsonApi.resource do
           description("User")
 
           attributes do
             username(:string, "User's username")
-            updated_at(:string, "Last update timestamp UTC", format: "ISO-8601")
-            created_at(:string, "First created timestamp UTC")
+            updated_at(:string, "Update timestamp UTC", format: "ISO-8601")
+            created_at(:string, "Created timestamp UTC", format: "ISO-8601")
           end
         end
     }

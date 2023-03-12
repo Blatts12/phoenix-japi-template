@@ -5,8 +5,10 @@ defmodule ScrollWeb.ConnHelpers do
   alias Scroll.Accounts
   alias Scroll.Accounts.{User, UserToken}
 
+  import Scroll.Factory
+
   @spec log_in_user(Plug.Conn.t(), User.t()) :: Plug.Conn.t()
-  def log_in_user(conn, nil), do: conn
+  def log_in_user(conn, nil), do: log_in_user(conn, insert(:user))
 
   def log_in_user(conn, user) do
     %UserToken{token: token} = Accounts.generate_user_session_token(user)
@@ -19,4 +21,7 @@ defmodule ScrollWeb.ConnHelpers do
       same_site: "Lax"
     )
   end
+
+  @spec log_in_user(Plug.Conn.t()) :: Plug.Conn.t()
+  def log_in_user(conn), do: log_in_user(conn, insert(:user))
 end

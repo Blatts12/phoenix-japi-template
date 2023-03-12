@@ -1,17 +1,191 @@
 {
   "basePath": "/api",
   "definitions": {
-    "User": {
+    "Post": {
+      "description": "A JSON-API document with a single [PostResource](#postresource) resource",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/PostResource"
+        },
+        "included": {
+          "description": "Included resources",
+          "items": {
+            "properties": {
+              "id": {
+                "description": "The JSON-API resource ID",
+                "type": "string"
+              },
+              "type": {
+                "description": "The JSON-API resource type",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "links": {
+          "properties": {
+            "self": {
+              "description": "the link that generated the current response document.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "data"
+      ],
+      "type": "object"
+    },
+    "PostResource": {
+      "description": "Post",
+      "properties": {
+        "attributes": {
+          "properties": {
+            "content": {
+              "description": "Post's content",
+              "type": "string"
+            },
+            "created_at": {
+              "description": "Created timestamp UTC",
+              "format": "ISO-8601",
+              "type": "string"
+            },
+            "title": {
+              "description": "Post's title",
+              "type": "string"
+            },
+            "updated_at": {
+              "description": "Update timestamp UTC",
+              "format": "ISO-8601",
+              "type": "string"
+            },
+            "user_id": {
+              "description": "Post's author id",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "id": {
+          "description": "The JSON-API resource ID",
+          "type": "string"
+        },
+        "links": {
+          "properties": {},
+          "type": "object"
+        },
+        "relationships": {
+          "properties": {
+            "UserResource": {
+              "properties": {
+                "data": {
+                  "properties": {
+                    "id": {
+                      "description": "Related UserResource resource id",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of related UserResource resource",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "links": {
+                  "properties": {
+                    "related": {
+                      "description": "Related UserResource link",
+                      "type": "string"
+                    },
+                    "self": {
+                      "description": "Relationship link for UserResource",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "type": {
+          "description": "The JSON-API resource type",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Posts": {
+      "description": "A page of [PostResource](#postresource) results",
+      "properties": {
+        "data": {
+          "description": "Content with [PostResource](#postresource) objects",
+          "items": {
+            "$ref": "#/definitions/PostResource"
+          },
+          "type": "array"
+        },
+        "links": {
+          "properties": {
+            "first": {
+              "description": "Link to the first page of results",
+              "type": "string"
+            },
+            "last": {
+              "description": "Link to the last page of results",
+              "type": "string"
+            },
+            "next": {
+              "description": "Link to the next page of results",
+              "type": "string"
+            },
+            "prev": {
+              "description": "Link to the previous page of results",
+              "type": "string"
+            },
+            "self": {
+              "description": "Link to this page of results",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "meta": {
+          "properties": {
+            "total-count": {
+              "description": "The total number of items available",
+              "type": "integer"
+            },
+            "total-pages": {
+              "description": "The total number of pages available",
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "data"
+      ],
+      "type": "object"
+    },
+    "UserResource": {
       "description": "User",
       "properties": {
         "attributes": {
           "properties": {
             "created_at": {
-              "description": "First created timestamp UTC",
+              "description": "Created timestamp UTC",
+              "format": "ISO-8601",
               "type": "string"
             },
             "updated_at": {
-              "description": "Last update timestamp UTC",
+              "description": "Update timestamp UTC",
               "format": "ISO-8601",
               "type": "string"
             },
@@ -45,7 +219,7 @@
   "host": "localhost:4000",
   "info": {
     "title": "Scroll API",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   "paths": {},
   "swagger": "2.0"

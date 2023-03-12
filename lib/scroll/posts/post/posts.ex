@@ -1,7 +1,5 @@
 defmodule Scroll.Posts.Posts do
-  @moduledoc """
-    This module defines post specific functions
-  """
+  @moduledoc false
 
   import Ecto.Query, warn: false
 
@@ -9,19 +7,19 @@ defmodule Scroll.Posts.Posts do
   alias Scroll.Repo
   alias Scroll.Types
 
-  @spec list(Types.include(), Types.sort(), Types.filter()) :: list(Post.t())
-  def list(preloads \\ [], sort \\ [], filter \\ []) do
+  @spec list(Types.japi_opts()) :: list(Post.t())
+  def list(opts \\ []) do
     Post
-    |> preload(^preloads)
-    |> where(^filter)
-    |> order_by(^sort)
+    |> preload(^Keyword.get(opts, :include, []))
+    |> where(^Keyword.get(opts, :filter, []))
+    |> order_by(^Keyword.get(opts, :sort, []))
     |> Repo.all()
   end
 
-  @spec get(Types.id(), Types.include()) :: Post.t()
-  def get(id, preloads \\ []) do
+  @spec get(Types.id(), Types.japi_opts()) :: Post.t()
+  def get(id, opts \\ []) do
     Post
-    |> preload(^preloads)
+    |> preload(^Keyword.get(opts, :include, []))
     |> Repo.get(id)
   end
 
