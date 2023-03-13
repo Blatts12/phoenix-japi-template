@@ -16,7 +16,7 @@ defmodule Scroll.Posts.Posts do
     |> Repo.all()
   end
 
-  @spec get(Types.id(), Types.japi_opts()) :: Post.t()
+  @spec get(Types.id(), Types.japi_opts()) :: Post.t() | nil
   def get(id, opts \\ []) do
     Post
     |> preload(^Keyword.get(opts, :include, []))

@@ -4,6 +4,7 @@ defmodule Scroll.Accounts.User do
   use Scroll.Schema
 
   alias Ecto.Changeset
+  alias Scroll.Accounts.UserPolicy
 
   @type t() :: Scroll.Accounts.UserSpec.t()
 
@@ -14,6 +15,8 @@ defmodule Scroll.Accounts.User do
 
     timestamps()
   end
+
+  defdelegate authorize(action, user, post), to: UserPolicy
 
   @create_required_fields [:username, :password]
   @create_optional_fields []

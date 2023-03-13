@@ -5,12 +5,12 @@ defmodule Scroll.Accounts do
   alias Scroll.Accounts.UserTokens
 
   # User
-  defdelegate list_users, to: Users
-  defdelegate get_user!(id), to: Users
+  defdelegate list_users(opts \\ []), to: Users, as: :list
+  defdelegate get_user(id, opts \\ []), to: Users, as: :get
   defdelegate get_user_by_username(username), to: Users
-  defdelegate create_user(attrs), to: Users
-  defdelegate update_user(user, attrs), to: Users
-  defdelegate delete_user(user), to: Users
+  defdelegate create_user(attrs), to: Users, as: :create
+  defdelegate update_user(user, attrs), to: Users, as: :update
+  defdelegate delete_user(user), to: Users, as: :delete
 
   # UserToken
   defdelegate generate_user_session_token(user), to: UserTokens

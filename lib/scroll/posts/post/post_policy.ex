@@ -8,10 +8,10 @@ defmodule Scroll.Posts.PostPolicy do
   @behaviour Bodyguard.Policy
 
   @spec authorize(Types.actions(), User.t(), Post.t()) :: {:error, :unauthorized} | :ok
-  def authorize(:update, %User{id: user_id} = _user, %Post{user_id: user_id} = _post), do: :ok
-  def authorize(:delete, %User{id: user_id} = _user, %Post{user_id: user_id} = _post), do: :ok
+  def authorize(:update, %User{id: user_id}, %Post{user_id: user_id}), do: :ok
+  def authorize(:delete, %User{id: user_id}, %Post{user_id: user_id}), do: :ok
 
-  def authorize(:create, %User{} = _user, _), do: :ok
+  def authorize(:create, %User{}, _), do: :ok
 
   def authorize(:show, _, _), do: :ok
   def authorize(:index, _, _), do: :ok

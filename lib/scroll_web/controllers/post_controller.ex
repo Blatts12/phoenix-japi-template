@@ -1,6 +1,6 @@
 defmodule ScrollWeb.PostController do
   @moduledoc false
-  alias PhoenixSwagger.JsonApi
+
   alias Scroll.Posts
 
   use ScrollWeb.JapiController,

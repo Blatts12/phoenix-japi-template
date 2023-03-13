@@ -26,10 +26,13 @@ defmodule ScrollWeb.JapiController do
 
       action_fallback(ScrollWeb.FallbackController)
 
+      @type controller() ::
+              Plug.Conn.t() | atom() | {:error, binary() | atom() | Ecto.Changeset.t()}
+
       # list
       if unquote(enable_index) do
-        @spec index(Plug.Conn.t(), map()) ::
-                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
+        @spec index(Plug.Conn.t(), map()) :: controller()
+
         def index(conn, _params) do
           data = unquote(res_module).list(fetch_opts(conn))
           render(conn, "index.json", data: data)
@@ -38,8 +41,7 @@ defmodule ScrollWeb.JapiController do
 
       # one
       if unquote(enable_show) do
-        @spec show(Plug.Conn.t(), map()) ::
-                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
+        @spec show(Plug.Conn.t(), map()) :: controller()
         def show(conn, %{"id" => id}) do
           data = unquote(res_module).get(id, fetch_opts(conn))
 
@@ -51,8 +53,7 @@ defmodule ScrollWeb.JapiController do
 
       # create
       if unquote(enable_create) do
-        @spec create(Plug.Conn.t(), map()) ::
-                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
+        @spec create(Plug.Conn.t(), map()) :: controller()
         def create(conn, params) do
           with {:ok, %unquote(res_struct){} = data} <-
                  unquote(res_module).create(put_user_id(conn, params, unquote(put_user_id?))) do
@@ -65,8 +66,7 @@ defmodule ScrollWeb.JapiController do
 
       # update
       if unquote(enable_update) do
-        @spec update(Plug.Conn.t(), map()) ::
-                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
+        @spec update(Plug.Conn.t(), map()) :: controller()
         def update(conn, %{"id" => id} = params) do
           data = unquote(res_module).get(id)
 
@@ -81,8 +81,7 @@ defmodule ScrollWeb.JapiController do
 
       # detele
       if unquote(enable_delete) do
-        @spec delete(Plug.Conn.t(), map()) ::
-                Plug.Conn.t() | {:error, binary() | Ecto.Changeset.t()}
+        @spec delete(Plug.Conn.t(), map()) :: controller()
         def delete(conn, %{"id" => id}) do
           data = unquote(res_module).get(id)
 
