@@ -4,11 +4,6 @@ defmodule ScrollWeb.UserController do
   alias Scroll.Accounts
 
   use ScrollWeb.JapiController,
-    index: [enable: true],
-    show: [enable: true],
-    create: [enable: true, put_user_id?: false],
-    update: [enable: true],
-    delete: [enable: true],
     struct: Accounts.User,
     module: Accounts.Users
 

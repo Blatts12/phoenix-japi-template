@@ -2,22 +2,16 @@ defmodule ScrollWeb.JapiController do
   @moduledoc false
 
   @type opts() :: [
-          index: [enable: boolean()],
-          show: [enable: boolean()],
-          create: [enable: boolean(), put_user_id?: boolean()],
-          update: [enable: boolean()],
-          delete: [enable: boolean()],
+          except: list(atom()),
+          put_user_id?: boolean(),
           struct: struct(),
           module: module()
         ]
 
   @spec __using__(opts()) :: any()
   defmacro __using__(opts \\ []) do
-    [enable: enable_index] = Keyword.fetch!(opts, :index)
-    [enable: enable_show] = Keyword.fetch!(opts, :show)
-    [enable: enable_create, put_user_id?: put_user_id?] = Keyword.fetch!(opts, :create)
-    [enable: enable_update] = Keyword.fetch!(opts, :update)
-    [enable: enable_delete] = Keyword.fetch!(opts, :delete)
+    except = Keyword.get(opts, :except, [])
+    put_user_id? = Keyword.get(opts, :put_user_id?, false)
     res_struct = Keyword.fetch!(opts, :struct)
     res_module = Keyword.fetch!(opts, :module)
 
@@ -30,7 +24,7 @@ defmodule ScrollWeb.JapiController do
               Plug.Conn.t() | atom() | {:error, binary() | atom() | Ecto.Changeset.t()}
 
       # list
-      if unquote(enable_index) do
+      if :index not in unquote(except) do
         @spec index(Plug.Conn.t(), map()) :: controller()
 
         def index(conn, _params) do
@@ -40,7 +34,7 @@ defmodule ScrollWeb.JapiController do
       end
 
       # one
-      if unquote(enable_show) do
+      if :show not in unquote(except) do
         @spec show(Plug.Conn.t(), map()) :: controller()
         def show(conn, %{"id" => id}) do
           data = unquote(res_module).get(id, fetch_opts(conn))
@@ -52,7 +46,7 @@ defmodule ScrollWeb.JapiController do
       end
 
       # create
-      if unquote(enable_create) do
+      if :create not in unquote(except) do
         @spec create(Plug.Conn.t(), map()) :: controller()
         def create(conn, params) do
           with {:ok, %unquote(res_struct){} = data} <-
@@ -65,7 +59,7 @@ defmodule ScrollWeb.JapiController do
       end
 
       # update
-      if unquote(enable_update) do
+      if :update not in unquote(except) do
         @spec update(Plug.Conn.t(), map()) :: controller()
         def update(conn, %{"id" => id} = params) do
           data = unquote(res_module).get(id)
@@ -80,7 +74,7 @@ defmodule ScrollWeb.JapiController do
       end
 
       # detele
-      if unquote(enable_delete) do
+      if :delete not in unquote(except) do
         @spec delete(Plug.Conn.t(), map()) :: controller()
         def delete(conn, %{"id" => id}) do
           data = unquote(res_module).get(id)

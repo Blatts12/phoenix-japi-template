@@ -4,11 +4,7 @@ defmodule ScrollWeb.PostController do
   alias Scroll.Posts
 
   use ScrollWeb.JapiController,
-    index: [enable: true],
-    show: [enable: true],
-    create: [enable: true, put_user_id?: true],
-    update: [enable: true],
-    delete: [enable: true],
+    put_user_id?: true,
     struct: Posts.Post,
     module: Posts.Posts
 
