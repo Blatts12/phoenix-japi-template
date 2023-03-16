@@ -1,14 +1,15 @@
 defmodule ScrollWeb.JapiController do
   @moduledoc false
 
+  @type action() :: :create | :update | :delete | :index | :show
+
   @type opts() :: [
-          except: list(atom()),
+          except: list(action()),
           put_user_id?: boolean(),
           struct: struct(),
           module: module()
         ]
 
-  @spec __using__(opts()) :: any()
   defmacro __using__(opts \\ []) do
     except = Keyword.get(opts, :except, [])
     put_user_id? = Keyword.get(opts, :put_user_id?, false)

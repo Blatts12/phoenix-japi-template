@@ -43,6 +43,7 @@ defmodule ScrollWeb.Router do
     end
   end
 
+  @spec swagger_info :: map()
   def swagger_info do
     %{
       basePath: "/api",
