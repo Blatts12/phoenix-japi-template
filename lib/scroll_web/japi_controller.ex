@@ -29,8 +29,10 @@ defmodule ScrollWeb.JapiController do
         @spec index(Plug.Conn.t(), map()) :: controller()
 
         def index(conn, _params) do
-          data = unquote(res_module).list(fetch_opts(conn))
-          render(conn, "index.json", data: data)
+          with :ok <- Bodyguard.permit(unquote(res_struct), :index, fetch_current_user(conn)) do
+            data = unquote(res_module).list(fetch_opts(conn))
+            render(conn, "index.json", data: data)
+          end
         end
       end
 
@@ -40,7 +42,8 @@ defmodule ScrollWeb.JapiController do
         def show(conn, %{"id" => id}) do
           data = unquote(res_module).get(id, fetch_opts(conn))
 
-          with :ok <- is_existing(data) do
+          with :ok <- is_existing(data),
+               :ok <- Bodyguard.permit(unquote(res_struct), :show, fetch_current_user(conn), data) do
             render(conn, "show.json", data: data)
           end
         end
@@ -50,7 +53,8 @@ defmodule ScrollWeb.JapiController do
       if :create not in unquote(except) do
         @spec create(Plug.Conn.t(), map()) :: controller()
         def create(conn, params) do
-          with {:ok, %unquote(res_struct){} = data} <-
+          with :ok <- Bodyguard.permit(unquote(res_struct), :create, fetch_current_user(conn)),
+               {:ok, %unquote(res_struct){} = data} <-
                  unquote(res_module).create(put_user_id(conn, params, unquote(put_user_id?))) do
             conn
             |> put_status(:created)
@@ -66,7 +70,8 @@ defmodule ScrollWeb.JapiController do
           data = unquote(res_module).get(id)
 
           with :ok <- is_existing(data),
-               :ok <- unquote(res_struct).authorize(:update, fetch_current_user(conn), data),
+               :ok <-
+                 Bodyguard.permit(unquote(res_struct), :update, fetch_current_user(conn), data),
                {:ok, %unquote(res_struct){} = data} <-
                  unquote(res_module).update(data, params) do
             render(conn, "show.json", data: data)
@@ -81,7 +86,8 @@ defmodule ScrollWeb.JapiController do
           data = unquote(res_module).get(id)
 
           with :ok <- is_existing(data),
-               :ok <- unquote(res_struct).authorize(:delete, fetch_current_user(conn), data),
+               :ok <-
+                 Bodyguard.permit(unquote(res_struct), :delete, fetch_current_user(conn), data),
                {:ok, %unquote(res_struct){}} <- unquote(res_module).delete(data) do
             send_resp(conn, :no_content, "")
           end

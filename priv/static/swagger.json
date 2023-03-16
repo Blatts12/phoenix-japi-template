@@ -219,7 +219,7 @@
   "host": "localhost:4000",
   "info": {
     "title": "Scroll API",
-    "version": "0.0.2"
+    "version": "0.21.37"
   },
   "paths": {},
   "swagger": "2.0"

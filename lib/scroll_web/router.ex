@@ -48,7 +48,7 @@ defmodule ScrollWeb.Router do
     %{
       basePath: "/api",
       info: %{
-        version: "0.0.2",
+        version: "0.21.37",
         title: "Scroll API"
       }
     }
