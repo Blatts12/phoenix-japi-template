@@ -29,6 +29,21 @@ defmodule ScrollWeb do
 
       alias Scroll.Types
       alias ScrollWeb.Router.Helpers, as: Routes
+
+      def render_list_or_pagination(conn, template, %Scrivener.Page{} = data) do
+        render(conn, template,
+          data: data.entries,
+          pagination: [
+            total_pages: data.total_pages,
+            page: data.page_number,
+            page_size: data.page_size
+          ]
+        )
+      end
+
+      def render_list_or_pagination(conn, template, data) do
+        render(conn, template, data: data)
+      end
     end
   end
 

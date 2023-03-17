@@ -10,17 +10,19 @@ defmodule ScrollWeb.ControllerHelpers do
   @spec fetch_opts(Plug.Conn.t()) :: [
           include: Keyword.t() | [],
           sort: Keyword.t() | [],
-          filter: Keyword.t() | []
+          filter: Keyword.t() | [],
+          pagination: Keyword.t() | []
         ]
   def fetch_opts(%{assigns: %{jsonapi_query: query}}),
     do: [
       include: Map.get(query, :include, []),
       sort: Map.get(query, :sort, []),
-      filter: Map.get(query, :filter, [])
+      filter: Map.get(query, :filter, []),
+      pagination: get_pagination_opts(query)
     ]
 
   def fetch_opts(_conn),
-    do: %{include: [], sort: [], filter: []}
+    do: %{include: [], sort: [], filter: [], pagination: []}
 
   @spec put_user_id(binary() | Plug.Conn.t() | User.t() | nil, map()) :: map()
   def put_user_id(id, params) when is_binary(id), do: Enum.into(%{"user_id" => id}, params)
@@ -40,4 +42,13 @@ defmodule ScrollWeb.ControllerHelpers do
   @spec is_existing(any()) :: :ok | {:error, :not_found}
   def is_existing(nil), do: {:error, :not_found}
   def is_existing(_), do: :ok
+
+  @spec get_pagination_opts(JSONAPI.Config.t()) :: [
+          offset: integer(),
+          limit: integer(),
+          page: integer(),
+          page_size: integer()
+        ]
+  defp get_pagination_opts(%JSONAPI.Config{page: page}), do: Map.to_list(page)
+  defp get_pagination_opts(_), do: []
 end

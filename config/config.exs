@@ -3,7 +3,6 @@
 #
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
-
 # General application configuration
 import Config
 
@@ -59,7 +58,8 @@ config :phoenix, :json_library, Jason
 
 config :jsonapi,
   field_transformation: :camelize,
-  remove_links: true
+  remove_links: false,
+  paginator: ScrollWeb.BasePaginator
 
 config :bodyguard,
   default_error: :unauthorized

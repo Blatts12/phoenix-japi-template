@@ -7,13 +7,13 @@ defmodule Scroll.Posts.Posts do
   alias Scroll.Repo
   alias Scroll.Types
 
-  @spec list(Types.japi_opts()) :: list(Post.t())
+  @spec list(Types.japi_opts()) :: Scrivener.Page.t(Post.t()) | list(Post.t())
   def list(opts \\ []) do
     Post
     |> preload(^Keyword.get(opts, :include, []))
     |> where(^Keyword.get(opts, :filter, []))
     |> order_by(^Keyword.get(opts, :sort, []))
-    |> Repo.all()
+    |> Repo.paginate_or_list(Keyword.get(opts, :pagination, []))
   end
 
   @spec get(Types.id(), Types.japi_opts()) :: Post.t() | nil
