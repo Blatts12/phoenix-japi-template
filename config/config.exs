@@ -57,9 +57,10 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :jsonapi,
+  namespace: "/api",
   field_transformation: :camelize,
   remove_links: false,
-  paginator: ScrollWeb.BasePaginator
+  paginator: ScrollWeb.Pagination.BasePaginator
 
 config :bodyguard,
   default_error: :unauthorized

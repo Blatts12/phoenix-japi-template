@@ -27,7 +27,6 @@ defmodule ScrollWeb.JapiController do
       # list
       if :index not in unquote(except) do
         @spec index(Plug.Conn.t(), map()) :: controller()
-
         def index(conn, params) do
           with :ok <- Bodyguard.permit(unquote(res_struct), :index, fetch_current_user(conn)) do
             data = unquote(res_module).list(fetch_opts(conn))

@@ -43,12 +43,43 @@ defmodule ScrollWeb.ControllerHelpers do
   def is_existing(nil), do: {:error, :not_found}
   def is_existing(_), do: :ok
 
-  @spec get_pagination_opts(JSONAPI.Config.t()) :: [
-          offset: integer(),
-          limit: integer(),
-          page: integer(),
-          page_size: integer()
-        ]
-  defp get_pagination_opts(%JSONAPI.Config{page: page}), do: Map.to_list(page)
+  @spec get_pagination_opts(JSONAPI.Config.t()) :: Keyword.t()
+  defp get_pagination_opts(%JSONAPI.Config{page: page}) do
+    opts = Map.to_list(page)
+
+    if is_page_pagination?(opts) do
+      parse_page_pagination_opts(opts)
+    else
+      parse_cursor_pagination_opts(opts)
+    end
+  end
+
   defp get_pagination_opts(_), do: []
+
+  @allowed_page_pagination_opts ["page", "page_size"]
+  @spec parse_page_pagination_opts([{term(), term()}]) :: Keyword.t()
+  defp parse_page_pagination_opts(opts) do
+    opts
+    |> Enum.filter(fn {key, _value} -> key in @allowed_page_pagination_opts end)
+    |> Enum.map(fn {key, value} -> {String.to_existing_atom(key), String.to_integer(value)} end)
+    |> Keyword.put_new(:page, 1)
+  end
+
+  @allowed_cursor_pagination_opts ["after", "before", "limit"]
+  @spec parse_cursor_pagination_opts([{term(), term()}]) :: Keyword.t()
+  defp parse_cursor_pagination_opts(opts) do
+    opts
+    |> Enum.filter(fn {key, _value} -> key in @allowed_cursor_pagination_opts end)
+    |> Enum.map(fn {key, value} ->
+      if key == "limit" do
+        {String.to_existing_atom(key), String.to_integer(value)}
+      else
+        {String.to_existing_atom(key), value}
+      end
+    end)
+  end
+
+  @spec is_page_pagination?([{term(), term()}]) :: boolean()
+  defp is_page_pagination?(opts),
+    do: Enum.any?(opts, fn {key, _value} -> key == "page" or key == "page_size" end)
 end

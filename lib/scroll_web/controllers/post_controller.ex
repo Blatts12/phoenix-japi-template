@@ -9,7 +9,7 @@ defmodule ScrollWeb.PostController do
     module: Posts.Posts
 
   plug JSONAPI.QueryParser,
-    filter: ~w(title),
+    filter: ~w(id title user_id),
     sort: ~w(title inserted_at content),
     view: ScrollWeb.PostView
 

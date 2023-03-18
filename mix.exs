@@ -56,6 +56,7 @@ defmodule Scroll.MixProject do
       {:phoenix_swagger, "~> 0.8"},
       {:ex_json_schema, "~> 0.5"},
       {:scrivener_ecto, "~> 2.0"},
+      {:paginator, "~> 1.2.0"},
       {:ex_machina, "~> 2.7.0", only: :test},
       {:dialyxir, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:credo, "~> 1.6.3", only: [:dev, :test], runtime: false},

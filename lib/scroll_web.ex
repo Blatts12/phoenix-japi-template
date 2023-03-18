@@ -41,6 +41,17 @@ defmodule ScrollWeb do
         )
       end
 
+      def render_list_or_pagination(conn, template, %Paginator.Page{metadata: metadata} = data) do
+        render(conn, template,
+          data: data.entries,
+          pagination: [
+            after: metadata.after,
+            before: metadata.before,
+            limit: metadata.limit
+          ]
+        )
+      end
+
       def render_list_or_pagination(conn, template, data) do
         render(conn, template, data: data)
       end
