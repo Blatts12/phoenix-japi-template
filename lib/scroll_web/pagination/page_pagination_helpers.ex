@@ -15,28 +15,28 @@ defmodule ScrollWeb.Pagination.PagePaginationHelpers do
     total_pages = Keyword.get(pagination, :total_pages, 0)
 
     %{
-      first: page_first_link(data, view, conn, size, page),
+      first: page_first_link(data, view, conn, page, size),
       last: page_last_link(data, view, conn, size, total_pages),
-      next: page_next_link(data, view, conn, size, page, total_pages),
-      prev: page_prev_link(data, view, conn, size, page, total_pages)
+      next: page_next_link(data, view, conn, page, size, total_pages),
+      prev: page_prev_link(data, view, conn, page, size)
     }
   end
 
   defp page_next_link(data, view, conn, page, size, total_pages)
        when page < total_pages,
-       do: view.url_for_pagination(data, conn, %{size: size, page: page + 1})
+       do: view.url_for_pagination(data, conn, %{page_size: size, page: page + 1})
 
   defp page_next_link(_data, _view, _conn, _page, _size, _total_pages),
     do: nil
 
-  defp page_prev_link(data, view, conn, page, size, total_pages)
-       when page > 1 and total_pages != page,
-       do: view.url_for_pagination(data, conn, %{size: size, page: page - 1})
+  defp page_prev_link(data, view, conn, page, size)
+       when page > 1,
+       do: view.url_for_pagination(data, conn, %{page_size: size, page: page - 1})
 
-  defp page_prev_link(_data, _view, _conn, _page, _size, _total_pages),
+  defp page_prev_link(_data, _view, _conn, _page, _size),
     do: nil
 
-  defp page_first_link(data, view, conn, size, page),
+  defp page_first_link(data, view, conn, page, size),
     do: view.url_for_pagination(data, conn, %{page_size: size, page: page})
 
   defp page_last_link(data, view, conn, size, total_pages),
