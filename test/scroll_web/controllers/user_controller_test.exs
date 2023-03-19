@@ -4,7 +4,7 @@ defmodule ScrollWeb.UserControllerTest do
   alias Scroll.Accounts.User
 
   @create_attrs %{username: "username1234", password: "password1234"}
-  @invalid_attrs %{hashed_password: nil, username: nil}
+  @invalid_attrs %{password: nil, username: nil}
 
   describe "create - user" do
     test "renders error when data is invalid", %{conn: conn} do

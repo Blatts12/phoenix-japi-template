@@ -9,9 +9,7 @@ defmodule ScrollWeb.FetchUserPlug do
   @auth_cookie "_scroll_auth"
 
   @spec init(Plug.opts()) :: Plug.opts()
-  def init(options) do
-    options
-  end
+  def init(options), do: options
 
   @spec call(Plug.Conn.t(), list()) :: Plug.Conn.t()
   def call(conn, _opts) do

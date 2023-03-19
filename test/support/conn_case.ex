@@ -26,7 +26,7 @@ defmodule ScrollWeb.ConnCase do
       import ScrollWeb.AssertHelpers
       import ScrollWeb.ConnCase
       import ScrollWeb.ConnHelpers
-      import ScrollWeb.JSONAPIHelpers
+      import ScrollWeb.JapiHelpers
 
       alias ScrollWeb.Router.Helpers, as: Routes
 

@@ -42,4 +42,110 @@ defmodule ScrollWeb.AssertHelpers do
   def assert_conn_status(conn, status, text) do
     ExUnit.Assertions.assert(%Plug.Conn{status: ^status} = conn, text)
   end
+
+  defmacro assert_count_difference(resource, [with: with_value], do: block) do
+    quote do
+      before_value = unquote(resource) |> Scroll.Repo.aggregate(:count)
+      unquote(block)
+      after_value = unquote(resource) |> Scroll.Repo.aggregate(:count)
+      assert before_value + unquote(with_value) == after_value
+    end
+  end
+
+  defmacro refute_count_difference(resource, do: block) do
+    quote do
+      before_value = unquote(resource) |> Scroll.Repo.aggregate(:count)
+      unquote(block)
+      after_value = unquote(resource) |> Scroll.Repo.aggregate(:count)
+      assert before_value == after_value
+    end
+  end
+
+  @spec assert_page_paginates(Plug.Conn.t(), String.t(), atom(), atom()) :: any()
+  defmacro assert_page_paginates(conn, path, resource_atom, key) do
+    quote do
+      item_one = insert(unquote(resource_atom))
+      item_two = insert(unquote(resource_atom))
+
+      query_one = %{page: %{page: 1, page_size: 1}}
+
+      # first page
+      conn = get(unquote(conn), unquote(path), query_one)
+      assert response = json_response(conn, 200)
+      assert %{"next" => next} = response["links"]
+      assert ritems = response["data"]
+      assert length(ritems) == 1
+
+      assert Enum.any?(ritems, fn ritem ->
+               Map.get(ritem["attributes"], to_string(unquote(key))) ==
+                 Map.get(item_one, unquote(key))
+             end)
+
+      # next page
+      conn = get(conn, next)
+      assert response = json_response(conn, 200)
+      assert %{"prev" => prev} = response["links"]
+      assert ritems = response["data"]
+      assert length(ritems) == 1
+
+      assert Enum.any?(ritems, fn ritem ->
+               Map.get(ritem["attributes"], to_string(unquote(key))) ==
+                 Map.get(item_two, unquote(key))
+             end)
+
+      # prev page
+      conn = get(unquote(conn), prev)
+      assert ritems = json_response(conn, 200)["data"]
+      assert length(ritems) == 1
+
+      assert Enum.any?(ritems, fn ritem ->
+               Map.get(ritem["attributes"], to_string(unquote(key))) ==
+                 Map.get(item_one, unquote(key))
+             end)
+    end
+  end
+
+  @spec assert_cursor_paginates(Plug.Conn.t(), String.t(), atom(), atom()) :: any()
+  defmacro assert_cursor_paginates(conn, path, resource_atom, key) do
+    quote do
+      item_one = insert(unquote(resource_atom))
+      item_two = insert(unquote(resource_atom))
+
+      query_one = %{page: %{limit: 1}}
+
+      # first page
+      conn = get(unquote(conn), unquote(path), query_one)
+      assert response = json_response(conn, 200)
+      assert %{"next" => next} = response["links"]
+      assert ritems = response["data"]
+      assert length(ritems) == 1
+
+      assert Enum.any?(ritems, fn ritem ->
+               Map.get(ritem["attributes"], to_string(unquote(key))) ==
+                 Map.get(item_one, unquote(key))
+             end)
+
+      # next page
+      conn = get(conn, next)
+      assert response = json_response(conn, 200)
+      assert %{"prev" => prev} = response["links"]
+      assert ritems = response["data"]
+      assert length(ritems) == 1
+
+      assert Enum.any?(ritems, fn ritem ->
+               Map.get(ritem["attributes"], to_string(unquote(key))) ==
+                 Map.get(item_two, unquote(key))
+             end)
+
+      # prev page
+      conn = get(unquote(conn), prev, query_one)
+      assert ritems = json_response(conn, 200)["data"]
+      assert length(ritems) == 1
+
+      assert Enum.any?(ritems, fn ritem ->
+               Map.get(ritem["attributes"], to_string(unquote(key))) ==
+                 Map.get(item_one, unquote(key))
+             end)
+    end
+  end
 end

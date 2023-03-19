@@ -81,5 +81,5 @@ defmodule ScrollWeb.ControllerHelpers do
 
   @spec is_page_pagination?([{term(), term()}]) :: boolean()
   defp is_page_pagination?(opts),
-    do: Enum.any?(opts, fn {key, _value} -> key == "page" or key == "page_size" end)
+    do: Enum.any?(opts, fn {key, _value} -> key in ["page", "page_size"] end)
 end
