@@ -112,15 +112,12 @@ defmodule ScrollWeb.PostControllerTest do
 
     test "deletes chosen post", %{conn: conn, post: post, user: user} do
       conn = log_in_user(conn, user)
-
       conn = delete(conn, Routes.post_path(conn, :delete, post))
       assert_no_content(conn)
     end
 
     test "other user cannot delete someones post", %{conn: conn, post: post} do
-      user = insert(:user)
-      conn = log_in_user(conn, user)
-
+      conn = log_in_user(conn)
       conn = delete(conn, Routes.post_path(conn, :delete, post))
       assert_unauthorized(conn)
     end
