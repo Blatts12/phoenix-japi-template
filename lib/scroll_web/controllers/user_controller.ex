@@ -5,7 +5,8 @@ defmodule ScrollWeb.UserController do
 
   use ScrollWeb.JapiController,
     struct: Accounts.User,
-    module: Accounts.Users
+    module: Accounts.Users,
+    except: [:update, :delete, :index, :show]
 
   plug JSONAPI.QueryParser,
     filter: ~w(username),
