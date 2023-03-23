@@ -26,20 +26,20 @@ defmodule ScrollWeb.JapiController do
 
     actions =
       []
-      |> then(&if :index not in except, do: [index_res(res_module, res_struct) | &1], else: &1)
-      |> then(&if :show not in except, do: [show_res(res_module, res_struct) | &1], else: &1)
+      |> then(&if :index in except, do: &1, else: [index_res(res_module, res_struct) | &1])
+      |> then(&if :show in except, do: &1, else: [show_res(res_module, res_struct) | &1])
       |> then(
-        &if :create not in except,
-          do: [create_res(res_module, res_struct, put_user_id?) | &1],
-          else: &1
+        &if :create in except,
+          do: &1,
+          else: [create_res(res_module, res_struct, put_user_id?) | &1]
       )
-      |> then(&if :update not in except, do: [update_res(res_module, res_struct) | &1], else: &1)
-      |> then(&if :delete not in except, do: [delete_res(res_module, res_struct) | &1], else: &1)
+      |> then(&if :update in except, do: &1, else: [update_res(res_module, res_struct) | &1])
+      |> then(&if :delete in except, do: &1, else: [delete_res(res_module, res_struct) | &1])
 
     [base, actions]
   end
 
-  @spec index_res(module(), struct()) :: Macro.t()
+  @spec index_res(module(), struct()) :: tuple()
   defp index_res(res_module, res_struct) do
     quote do
       @spec index(Plug.Conn.t(), map()) ::
@@ -54,7 +54,7 @@ defmodule ScrollWeb.JapiController do
     end
   end
 
-  @spec show_res(module(), struct()) :: Macro.t()
+  @spec show_res(module(), struct()) :: tuple()
   defp show_res(res_module, res_struct) do
     quote do
       @spec show(Plug.Conn.t(), map()) ::
@@ -76,7 +76,7 @@ defmodule ScrollWeb.JapiController do
     end
   end
 
-  @spec create_res(module(), struct(), boolean() | nil) :: Macro.t()
+  @spec create_res(module(), struct(), boolean() | nil) :: tuple()
   defp create_res(res_module, res_struct, true) do
     quote do
       @spec create(Plug.Conn.t(), map()) ::
@@ -111,7 +111,7 @@ defmodule ScrollWeb.JapiController do
     end
   end
 
-  @spec update_res(module(), struct()) :: Macro.t()
+  @spec update_res(module(), struct()) :: tuple()
   defp update_res(res_module, res_struct) do
     quote do
       @spec update(Plug.Conn.t(), map()) ::
@@ -130,7 +130,7 @@ defmodule ScrollWeb.JapiController do
     end
   end
 
-  @spec delete_res(module(), struct()) :: Macro.t()
+  @spec delete_res(module(), struct()) :: tuple()
   defp delete_res(res_module, res_struct) do
     quote do
       @spec delete(Plug.Conn.t(), map()) ::

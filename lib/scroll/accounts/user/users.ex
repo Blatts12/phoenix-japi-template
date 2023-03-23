@@ -1,29 +1,11 @@
 defmodule Scroll.Accounts.Users do
-  @moduledoc """
-    This module defines user specific functions
-  """
-
-  import Ecto.Query, warn: false
+  @moduledoc false
 
   alias Scroll.Accounts.User
-  alias Scroll.Repo
-  alias Scroll.Types
 
-  @spec list(Types.japi_opts()) :: Scrivener.Page.t(User.t())
-  def list(opts \\ []) do
-    User
-    |> preload(^Keyword.get(opts, :include, []))
-    |> where(^Keyword.get(opts, :filter, []))
-    |> order_by(^Keyword.get(opts, :sort, []))
-    |> Repo.paginate_or_list(Keyword.get(opts, :pagination, []))
-  end
-
-  @spec get(Types.id(), Types.japi_opts()) :: User.t() | nil
-  def get(id, opts \\ []) do
-    User
-    |> preload(^Keyword.get(opts, :include, []))
-    |> Repo.get(id)
-  end
+  use Scroll.SubcontextFunctions,
+    except: [:create, :update],
+    struct: User
 
   @spec get_user_by_username(String.t()) :: User.t() | nil
   def get_user_by_username(username) do
@@ -43,11 +25,5 @@ defmodule Scroll.Accounts.Users do
     user
     |> User.update_changeset(attrs)
     |> Repo.update()
-  end
-
-  @spec delete(User.t()) :: Types.ecto_delete_result(User.t())
-  def delete(%User{} = user) do
-    user
-    |> Repo.delete()
   end
 end

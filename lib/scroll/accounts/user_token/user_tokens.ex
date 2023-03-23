@@ -1,7 +1,8 @@
 defmodule Scroll.Accounts.UserTokens do
   @moduledoc false
 
-  alias Scroll.Accounts.{User, UserToken, UserTokenSpec}
+  alias Scroll.Accounts.User
+  alias Scroll.Accounts.UserToken
   alias Scroll.Repo
 
   @spec generate_user_session_token(User.t()) :: UserToken.t()
@@ -11,14 +12,14 @@ defmodule Scroll.Accounts.UserTokens do
     |> Repo.insert!()
   end
 
-  @spec get_user_by_session_token(UserTokenSpec.token()) :: User.t() | nil
+  @spec get_user_by_session_token(UserToken.token()) :: User.t() | nil
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
 
     Repo.one(query)
   end
 
-  @spec delete_session_token(UserTokenSpec.token()) :: :ok
+  @spec delete_session_token(UserToken.token()) :: :ok
   def delete_session_token(token) do
     Repo.delete_all(UserToken.token_and_context_query(token, "session"))
 

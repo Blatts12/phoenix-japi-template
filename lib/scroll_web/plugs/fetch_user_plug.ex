@@ -4,7 +4,7 @@ defmodule ScrollWeb.FetchUserPlug do
   import Plug.Conn
 
   alias Scroll.Accounts
-  alias Scroll.Accounts.UserTokenSpec
+  alias Scroll.Accounts.UserToken
 
   @auth_cookie "_scroll_auth"
 
@@ -19,7 +19,7 @@ defmodule ScrollWeb.FetchUserPlug do
     assign(conn, :current_user, user)
   end
 
-  @spec ensure_user_token(Plug.Conn.t()) :: {UserTokenSpec.token() | nil, Plug.Conn.t()}
+  @spec ensure_user_token(Plug.Conn.t()) :: {UserToken.token() | nil, Plug.Conn.t()}
   defp ensure_user_token(conn) do
     conn = fetch_session(conn)
 

@@ -1,5 +1,10 @@
 %Doctor.Config{
-  ignore_modules: [Inspect.Scroll.Accounts.User, ScrollWeb],
+  ignore_modules: [
+    Inspect.Scroll.Accounts.User,
+    Scroll.SubcontextFunctions,
+    ScrollWeb,
+    ScrollWeb.JapiController
+  ],
   ignore_paths: [~r(^test*)],
   min_module_doc_coverage: 0,
   min_module_spec_coverage: 100,

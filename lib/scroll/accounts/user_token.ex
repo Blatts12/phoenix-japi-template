@@ -5,9 +5,11 @@ defmodule Scroll.Accounts.UserToken do
 
   import Ecto.Query
 
-  alias Scroll.Accounts.{User, UserTokenSpec}
+  alias Scroll.Accounts.User
+  alias Scroll.Accounts.UserTokenSpec
 
   @type t() :: UserTokenSpec.t()
+  @type token() :: UserTokenSpec.token()
 
   @rand_size 32
 
