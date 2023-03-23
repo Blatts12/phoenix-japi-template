@@ -30,14 +30,14 @@ defmodule ScrollWeb.ControllerHelpers do
   def put_user_id(%Plug.Conn{} = conn, params), do: put_user_id(fetch_current_user(conn), params)
   def put_user_id(_, params), do: params
 
-  @spec put_user_id(binary() | Plug.Conn.t() | User.t() | nil, map(), boolean()) :: map()
+  @spec put_user_id(binary() | Plug.Conn.t() | User.t() | nil, map(), boolean() | nil) :: map()
   def put_user_id(id, params, true) when is_binary(id), do: Enum.into(%{"user_id" => id}, params)
   def put_user_id(%User{id: id} = _user, params, true), do: Enum.into(%{"user_id" => id}, params)
 
   def put_user_id(%Plug.Conn{} = conn, params, true),
     do: put_user_id(fetch_current_user(conn), params)
 
-  def put_user_id(_, params, false), do: params
+  def put_user_id(_, params, _), do: params
 
   @spec is_existing(any()) :: :ok | {:error, :not_found}
   def is_existing(nil), do: {:error, :not_found}

@@ -76,8 +76,8 @@ defmodule ScrollWeb.JapiController do
     end
   end
 
-  @spec create_res(module(), struct(), boolean()) :: Macro.t()
-  defp create_res(res_module, res_struct, put_user_id?) do
+  @spec create_res(module(), struct(), boolean() | nil) :: Macro.t()
+  defp create_res(res_module, res_struct, true) do
     quote do
       @spec create(Plug.Conn.t(), map()) ::
               Plug.Conn.t() | atom() | {:error, binary() | atom() | Ecto.Changeset.t()}
@@ -85,7 +85,24 @@ defmodule ScrollWeb.JapiController do
         with :ok <-
                Bodyguard.permit(unquote(res_struct), :create, fetch_current_user(conn)),
              {:ok, %unquote(res_struct){} = data} <-
-               unquote(res_module).create(put_user_id(conn, params, unquote(put_user_id?))) do
+               unquote(res_module).create(put_user_id(conn, params)) do
+          conn
+          |> put_status(:created)
+          |> render("show.json", data: data)
+        end
+      end
+    end
+  end
+
+  defp create_res(res_module, res_struct, _) do
+    quote do
+      @spec create(Plug.Conn.t(), map()) ::
+              Plug.Conn.t() | atom() | {:error, binary() | atom() | Ecto.Changeset.t()}
+      def create(conn, params) do
+        with :ok <-
+               Bodyguard.permit(unquote(res_struct), :create, fetch_current_user(conn)),
+             {:ok, %unquote(res_struct){} = data} <-
+               unquote(res_module).create(params) do
           conn
           |> put_status(:created)
           |> render("show.json", data: data)
