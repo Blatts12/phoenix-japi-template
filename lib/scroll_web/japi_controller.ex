@@ -10,7 +10,7 @@ defmodule ScrollWeb.JapiController do
           module: module()
         ]
 
-  @spec __using__(opts()) :: Macro.t()
+  @spec __using__(opts()) :: list(tuple())
   defmacro __using__(opts \\ []) do
     except = Keyword.get(opts, :except, [])
     put_user_id? = Keyword.get(opts, :put_user_id?, false)

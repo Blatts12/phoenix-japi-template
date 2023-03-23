@@ -8,7 +8,7 @@ defmodule Scroll.SubcontextFunctions do
           struct: struct()
         ]
 
-  @spec __using__(opts()) :: Macro.t()
+  @spec __using__(opts()) :: list(tuple())
   defmacro __using__(opts \\ []) do
     except = Keyword.get(opts, :except, [])
     res_struct = Keyword.fetch!(opts, :struct)
