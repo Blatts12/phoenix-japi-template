@@ -35,6 +35,7 @@ defmodule ScrollWeb do
         render(conn, template,
           data: data.entries,
           pagination: [
+            total_entries: data.total_entries,
             total_pages: data.total_pages,
             page: data.page_number,
             page_size: data.page_size
