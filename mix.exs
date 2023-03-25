@@ -41,7 +41,7 @@ defmodule Scroll.MixProject do
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_view, "~> 2.0.2"},
       {:phoenix_live_dashboard, "~> 0.6"},
-      {:phoenix_swagger, "~> 0.8"},
+      {:phoenix_swagger, github: "Blatts12/phoenix_swagger"},
       {:ecto_sql, "~> 3.6"},
       {:postgrex, ">= 0.0.0"},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},

@@ -29,6 +29,7 @@ defmodule ScrollWeb do
 
       alias Scroll.Types
       alias ScrollWeb.Router.Helpers, as: Routes
+      alias PhoenixSwagger.JapiBody
 
       def render_list_or_pagination(conn, template, %Scrivener.Page{} = data) do
         render(conn, template,

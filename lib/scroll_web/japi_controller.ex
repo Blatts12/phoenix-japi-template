@@ -1,13 +1,22 @@
 defmodule ScrollWeb.JapiController do
   @moduledoc false
 
+  import ScrollWeb.JapiSwagger, only: [japi_swagger: 2]
+
   @type action() :: :create | :update | :delete | :index | :show
 
   @type opts() :: [
           except: list(action()),
           put_user_id?: boolean(),
           struct: struct(),
-          module: module()
+          module: module(),
+          swag: [
+            path: String.t(),
+            one: atom(),
+            list: atom(),
+            create_body: atom(),
+            update_body: atom()
+          ]
         ]
 
   @spec __using__(opts()) :: list(tuple())
@@ -16,6 +25,7 @@ defmodule ScrollWeb.JapiController do
     put_user_id? = Keyword.get(opts, :put_user_id?, false)
     res_struct = Keyword.fetch!(opts, :struct)
     res_module = Keyword.fetch!(opts, :module)
+    swag = Keyword.get(opts, :swag)
 
     base =
       quote do
@@ -36,7 +46,9 @@ defmodule ScrollWeb.JapiController do
       |> then(&if :update in except, do: &1, else: [update_res(res_module, res_struct) | &1])
       |> then(&if :delete in except, do: &1, else: [delete_res(res_module, res_struct) | &1])
 
-    [base, actions]
+    swagger = japi_swagger(swag, except)
+
+    [base, actions, swagger]
   end
 
   @spec index_res(module(), struct()) :: tuple()

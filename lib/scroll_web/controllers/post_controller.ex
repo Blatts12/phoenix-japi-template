@@ -6,7 +6,14 @@ defmodule ScrollWeb.PostController do
   use ScrollWeb.JapiController,
     put_user_id?: true,
     struct: Posts.Post,
-    module: Posts.Posts
+    module: Posts.Posts,
+    swag: [
+      path: "/posts",
+      one: :Post,
+      list: :Posts,
+      create_body: :PostBody,
+      update_body: :PostBody
+    ]
 
   plug JSONAPI.QueryParser,
     filter: ~w(id title user_id),
@@ -31,7 +38,22 @@ defmodule ScrollWeb.PostController do
           relationship(:UserResource)
         end,
       Post: JsonApi.single(:PostResource),
-      Posts: JsonApi.page(:PostResource)
+      Posts: JsonApi.page(:PostResource),
+      PostBody:
+        swagger_schema do
+          properties do
+            type(:string, "Resource type - posts", required: true)
+
+            attributes(
+              Schema.new do
+                properties do
+                  title(:string, "Post's title", required: true)
+                  content(:string, "Post's content", required: true)
+                end
+              end
+            )
+          end
+        end
     }
   end
 end

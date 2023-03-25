@@ -39,6 +39,35 @@
       ],
       "type": "object"
     },
+    "PostBody": {
+      "properties": {
+        "attributes": {
+          "properties": {
+            "content": {
+              "description": "Post's content",
+              "type": "string"
+            },
+            "title": {
+              "description": "Post's title",
+              "type": "string"
+            }
+          },
+          "required": [
+            "content",
+            "title"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "description": "Resource type - posts",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    },
     "PostResource": {
       "description": "Post",
       "properties": {
@@ -96,10 +125,6 @@
                 },
                 "links": {
                   "properties": {
-                    "related": {
-                      "description": "Related UserResource link",
-                      "type": "string"
-                    },
                     "self": {
                       "description": "Relationship link for UserResource",
                       "type": "string"
@@ -221,6 +246,208 @@
     "title": "Scroll API",
     "version": "0.21.37"
   },
-  "paths": {},
+  "paths": {
+    "/posts": {
+      "get": {
+        "description": "",
+        "operationId": "ScrollWeb.PostController.index",
+        "parameters": [
+          {
+            "description": "Number of elements per page [Page pagination]",
+            "in": "query",
+            "name": "page[page_size]",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "description": "Number of the page [Page pagination]",
+            "in": "query",
+            "name": "page[page]",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "description": "Return elements after cursor [Cursor pagination]",
+            "in": "query",
+            "name": "page[after]",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Return elements before cursor [Cursor pagination]",
+            "in": "query",
+            "name": "page[before]",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "Number of elements per page [Cursor pagination]",
+            "in": "query",
+            "name": "page[limit]",
+            "required": false,
+            "type": "integer"
+          }
+        ],
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Post"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "description": "",
+        "operationId": "ScrollWeb.PostController.create",
+        "parameters": [
+          {
+            "description": "The post details",
+            "in": "body",
+            "name": "user",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/PostBody"
+            }
+          }
+        ],
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Post"
+        ]
+      }
+    },
+    "/posts/{id}": {
+      "delete": {
+        "description": "",
+        "operationId": "ScrollWeb.PostController.delete",
+        "parameters": [
+          {
+            "description": "Post's id",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "requried": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Post"
+        ]
+      },
+      "get": {
+        "description": "",
+        "operationId": "ScrollWeb.PostController.show",
+        "parameters": [
+          {
+            "description": "Resource's id",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "requried": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Post"
+        ]
+      },
+      "put": {
+        "consumes": [
+          "application/vnd.api+json"
+        ],
+        "description": "",
+        "operationId": "ScrollWeb.PostController.update",
+        "parameters": [
+          {
+            "description": "Resource's id",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "requried": true,
+            "type": "string"
+          },
+          {
+            "description": "The resource details",
+            "in": "body",
+            "name": "user",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/PostBody"
+            }
+          }
+        ],
+        "produces": [
+          "application/vnd.api+json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Post"
+        ]
+      }
+    }
+  },
   "swagger": "2.0"
 }
