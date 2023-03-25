@@ -312,10 +312,10 @@
         "operationId": "ScrollWeb.PostController.create",
         "parameters": [
           {
-            "description": "The post details",
+            "description": "The resource details",
             "in": "body",
             "name": "user",
-            "required": false,
+            "required": true,
             "schema": {
               "$ref": "#/definitions/PostBody"
             }
@@ -347,11 +347,10 @@
         "operationId": "ScrollWeb.PostController.delete",
         "parameters": [
           {
-            "description": "Post's id",
+            "description": "Resource's id",
             "in": "path",
             "name": "id",
             "required": true,
-            "requried": true,
             "type": "string"
           }
         ],
@@ -377,7 +376,6 @@
             "in": "path",
             "name": "id",
             "required": true,
-            "requried": true,
             "type": "string"
           }
         ],
@@ -412,14 +410,13 @@
             "in": "path",
             "name": "id",
             "required": true,
-            "requried": true,
             "type": "string"
           },
           {
             "description": "The resource details",
             "in": "body",
             "name": "user",
-            "required": false,
+            "required": true,
             "schema": {
               "$ref": "#/definitions/PostBody"
             }

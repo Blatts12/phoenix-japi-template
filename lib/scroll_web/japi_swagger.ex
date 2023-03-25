@@ -65,7 +65,7 @@ defmodule ScrollWeb.JapiSwagger do
         produces("application/vnd.api+json")
 
         parameters do
-          id(:path, :string, "Resource's id", requried: true)
+          id(:path, :string, "Resource's id")
         end
 
         response(200, "OK", PhoenixSwagger.Schema.ref(unquote(one)))
@@ -84,7 +84,9 @@ defmodule ScrollWeb.JapiSwagger do
         produces("application/vnd.api+json")
 
         parameters do
-          user(:body, PhoenixSwagger.Schema.ref(unquote(body)), "The post details")
+          user(:body, PhoenixSwagger.Schema.ref(unquote(body)), "The resource details",
+            required: true
+          )
         end
 
         response(201, "Created", PhoenixSwagger.Schema.ref(unquote(one)))
@@ -103,8 +105,11 @@ defmodule ScrollWeb.JapiSwagger do
         produces("application/vnd.api+json")
 
         parameters do
-          id(:path, :string, "Resource's id", requried: true)
-          user(:body, PhoenixSwagger.Schema.ref(unquote(body)), "The resource details")
+          id(:path, :string, "Resource's id")
+
+          user(:body, PhoenixSwagger.Schema.ref(unquote(body)), "The resource details",
+            required: true
+          )
         end
 
         response(200, "OK", PhoenixSwagger.Schema.ref(unquote(one)))
@@ -121,7 +126,7 @@ defmodule ScrollWeb.JapiSwagger do
         PhoenixSwagger.Path.delete("#{unquote(path)}/{id}")
 
         parameters do
-          id(:path, :string, "Post's id", requried: true)
+          id(:path, :string, "Resource's id")
         end
 
         response(204, "No Content")
