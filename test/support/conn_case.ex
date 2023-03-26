@@ -32,6 +32,8 @@ defmodule ScrollWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint ScrollWeb.Endpoint
+
+      use PhoenixSwagger.SchemaTest, "priv/static/swagger.json"
     end
   end
 

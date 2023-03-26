@@ -4,9 +4,10 @@ defmodule ScrollWeb.PostControllerTest do
   alias Scroll.Posts.Post
 
   describe "index - post" do
-    test "lists all posts", %{conn: conn} do
+    test "lists all posts", %{conn: conn, swagger_schema: schema} do
       post = insert(:post)
       conn = get(conn, Routes.post_path(conn, :index))
+      assert %Plug.Conn{} = validate_resp_schema(conn, schema, "Posts")
       assert rposts = json_response(conn, 200)["data"]
       assert Enum.any?(rposts, fn rpost -> rpost["attributes"]["title"] == post.title end)
     end
@@ -21,9 +22,10 @@ defmodule ScrollWeb.PostControllerTest do
   end
 
   describe "show - post" do
-    test "gets post", %{conn: conn} do
+    test "gets post", %{conn: conn, swagger_schema: schema} do
       post = insert(:post)
       conn = get(conn, Routes.post_path(conn, :show, post))
+      assert %Plug.Conn{} = validate_resp_schema(conn, schema, "Post")
       assert rpost = json_response(conn, 200)["data"]
       assert to_string(post.id) == rpost["id"]
     end
@@ -35,12 +37,13 @@ defmodule ScrollWeb.PostControllerTest do
   end
 
   describe "create - post" do
-    test "renders post when data is valid", %{conn: conn} do
+    test "renders post when data is valid", %{conn: conn, swagger_schema: schema} do
       conn = log_in_user(conn)
       data = japi_params_for("posts", :post)
 
       assert_count_difference(Post, with: 1) do
         conn = post(conn, Routes.post_path(conn, :create), data: data)
+        assert %Plug.Conn{} = validate_resp_schema(conn, schema, "Post")
         assert %{"title" => title} = json_response(conn, 201)["data"]["attributes"]
         assert title == data["attributes"].title
       end
@@ -74,11 +77,17 @@ defmodule ScrollWeb.PostControllerTest do
       %{post: post, user: user}
     end
 
-    test "renders post when data is valid", %{conn: conn, post: post, user: user} do
+    test "renders post when data is valid", %{
+      conn: conn,
+      swagger_schema: schema,
+      post: post,
+      user: user
+    } do
       conn = log_in_user(conn, user)
       data = japi_params_for("posts", :post, post.id)
 
       conn = put(conn, Routes.post_path(conn, :update, post), data: data)
+      assert %Plug.Conn{} = validate_resp_schema(conn, schema, "Post")
       assert %{"id" => id, "attributes" => attributes} = json_response(conn, 200)["data"]
 
       assert id == data["id"]
